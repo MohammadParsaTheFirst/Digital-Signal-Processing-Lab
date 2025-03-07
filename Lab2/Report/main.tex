@@ -1,0 +1,144 @@
+\documentclass{article}
+\usepackage{graphicx, subfig, fancyhdr, amsmath, amssymb, amsthm, url, hyperref, geometry, listings, xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+
+% Fix Unicode character issues
+\DeclareUnicodeCharacter{2212}{-}
+
+\lstset{
+    language=C,                         % Set language to C
+    basicstyle=\ttfamily\small,         % Font type and size
+    numbers=left,                        % Line numbers on the left
+    numberstyle=\tiny,                   % Style of line numbers
+    stepnumber=1,                         % Show every line number
+    frame=single,                         % Frame around the code block
+    backgroundcolor=\color{gray!10},      % Light gray background
+    keywordstyle=\color{blue}\bfseries,   % Blue for keywords (bold)
+    commentstyle=\color{green!50!black},  % Green for comments
+    stringstyle=\color{red},              % Red for strings
+    breaklines=true,                      % Break long lines
+    breakatwhitespace=true,               % Break only at spaces
+    showstringspaces=false,               % Do not underline spaces in strings
+    tabsize=4                             % Set tab size to 4 spaces
+}
+
+
+% Author Information
+\newcommand{\SecondAuthor}{Mohammad Hossein Momeni - std id: 99102359}
+\newcommand{\FirstAuthor}{Mohammad Parsa Dini - std id: 400101204}
+\newcommand{\exerciseset}{LAB 2 (Report)}
+
+% Page Formatting
+\fancypagestyle{plain}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO,LE]{\sffamily\bfseries\large Sharif University of Technology}
+\fancyhead[LO,RE]{\sffamily\bfseries\large EE 25-703: Digital Signal Processing}
+\fancyfoot[LO,RE]{\sffamily\bfseries\large LAB 2 Report}
+\fancyfoot[RO,LE]{\sffamily\bfseries\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+% Custom Commands
+\newcommand{\circledtimes}{\mathbin{\text{\large$\bigcirc$}\kern-0.9em\times}}
+
+% Image Path
+\graphicspath{{figures/}}
+
+%-------------------------------- Title ----------------------------------
+\title{
+    \includegraphics[width=3cm]{logo.png} \\ % Adjust width as needed
+    Digital Signal Processing LAB\par \exerciseset
+}
+\author{\FirstAuthor \\ \SecondAuthor}
+\date{}
+
+%--------------------------------- Document ----------------------------------
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+In this lab, we implemented an interrupt-based system for real-time audio signal processing. The DSP processor was configured to read an audio signal from the microphone, amplify it using a predefined gain factor, and then send the processed signal to the headphones. This process was handled using software interrupts, ensuring efficient and timely processing of incoming audio data.
+
+
+% In this session of the lab we implemented a code to 
+
+% In this code, we used a header named \texttt{IO.h} to which is responsible for initializing the DSP Board, configuring the audio codec
+% \\
+% Processors can not simply do nothing; they must execute some instructions even if it's waiting for the next 
+% \\
+
+\section*{Necessity of Interrupts in Signal Processing}
+In real-time digital signal processing, using interrupts is essential because processors cannot simply remain idle while waiting for new data. Instead of constantly checking for new input, interrupts allow the system to efficiently handle data as soon as it arrives. This prevents unnecessary CPU usage and ensures timely execution of critical tasks.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.3]{Screenshot 2025-03-06 191756.png} % Resizing the image to half its size
+    \caption{}
+    \label{fig:gr3}
+\end{figure}
+
+
+\section*{Interrupt Configuration Function}
+we also used a function named \texttt{hook\_int} which:
+\begin{enumerate}
+    \item \textbf{disables global interrupts }to prevent interference during configuration,
+    \item \textbf{Enables Non-Maskable Interrupts} \texttt{NMI} which are high-priority interrupts,
+    \item \textbf{Maps the serial port receive interrupt} to interrupt line 15.
+    \item \textbf{Enables the \texttt{RINT2} interrupt}, which is triggered when new audio data arrives.
+    \item \textbf{Re-enables global interrupts} to allow normal operation.
+\end{enumerate}
+
+\begin{lstlisting}
+    void hook_int(){
+        IRQ_globalDisable();    // Disable global interrupts
+        IRQ_nmiEnable();        // Enable Non-Maskable Interrupts (NMI)
+        IRQ_map(IRQ_EVT_RINT2, 15); // Map RINT2 (Receive Interrupt 2) to interrupt line 15
+        IRQ_enable(IRQ_EVT_RINT2);  // Enable the receive interrupt (RINT2)
+        IRQ_globalEnable();    // Re-enable global interrupts
+    }
+
+\end{lstlisting}
+
+\section*{Interrupt Service Routine}
+
+The \texttt{serialPortRcvISR()} function is an interrupt service routine that processes incoming audio data. It reads a sample from the codec, amplifies it by multiplying with \texttt{volumeGain}, and writes the modified sample back to the codec. This ensures real-time signal processing with minimal CPU usage.
+
+\begin{lstlisting}
+interrupt void serialPortRcvISR() {
+    Uint32 temp;
+    DSK6416_AIC23_read(hCodec, &temp);  // Read an audio sample from the codec
+    temp = (temp * volumeGain);         // Apply volume gain (amplify the sample)
+    //temp = temp & 0xFF00;  // (Commented out) Optional bit-masking
+    DSK6416_AIC23_write(hCodec, temp);  // Write the processed sample back to the codec
+}
+\end{lstlisting}
+
+
+\section*{Implementation}
+
+We configured the DSP board and set the input source to the microphone. Using the \texttt{hook\_int()} function, we disabled global interrupts, enabled non-maskable interrupts for critical signals, mapped the serial port receive interrupt to line 15, and activated it for new audio data arrivals. The \texttt{serialPortRcvISR()} function managed the interrupt service routine by reading incoming audio samples from the codec, amplifying them with a gain factor, and sending the amplified signal to the output. The continuous \texttt{while(1)} loop kept the processor active and efficiently handled incoming data using interrupts.
+
+\begin{lstlisting}
+int main(){
+    MBZIO_init(DSK6416_AIC23_FREQ_8KHZ); // Initialize DSP system at 8 kHz sample rate
+    MBZIO_set_inputsource_microphone();  // Set input source to microphone
+
+    //volumeGain = 3; // (Commented out) Set the volume gain factor
+
+    hook_int();  // Configure and enable interrupts
+
+    while(1){ }  // Infinite loop (processor waits for interrupts)
+}
+
+\end{lstlisting}
+We also used this line of code since our microphone is not stereo but the handsfrees are stereo, so we masked half of the 32 bits in order to determine which of the MSB and LSB corresponds to which handsfree. We found that the MSB corresponds to the left handsfree. We also set a Gel file gain in order to adjust the volume.  
+\begin{lstlisting}
+    temp = ( temp * volumeGain ) & 0xFF00; 
+\end{lstlisting}
+
+
+% --------------------------------------------------
+
+\end{document}

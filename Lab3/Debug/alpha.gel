@@ -1,0 +1,6 @@
+/*gaincontrol.gel Create slider and vary gain of sinewave*/
+menuitem "alpha"
+slider Alpha(0,10,1,1,alpha_parameter) /*incr by 5,up to 35*/
+{
+alpha = alpha_parameter; /*vary gain of sine*/
+}

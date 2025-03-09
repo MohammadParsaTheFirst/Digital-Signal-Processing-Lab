@@ -1,0 +1,8 @@
+-z -c -m"./Debug/Lab2.map" -o"./Debug/Lab2.out" -w -x -i"C:/CCStudio_v3.1/C6000/rtdx/lib" -i"C:/CCStudio_v3.1/C6000/csl/lib" -i"C:/CCStudio_v3.1/C6000/xdais/lib" -i"C:/CCStudio_v3.1/C6000/bios/lib" -i"C:/CCStudio_v3.1/C6000/cgtools/lib"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\lab2.cmd"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\Debug\main.obj"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\Debug\MassoudBabaieZadeh_IO.obj"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\Debug\vectors.obj"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\csl6416.lib"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\dsk6416bsl.lib"
+"C:\CCStudio_v3.1\MyProjects\lab2\Lab2\rts6400.lib"

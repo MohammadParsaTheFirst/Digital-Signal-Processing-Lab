@@ -1,0 +1,8 @@
+-z -c -m"./Debug/lab4.map" -o"./Debug/lab4.out" -w -x -i"C:/CCStudio_v3.1/C6000/rtdx/lib" -i"C:/CCStudio_v3.1/C6000/csl/lib" -i"C:/CCStudio_v3.1/C6000/xdais/lib" -i"C:/CCStudio_v3.1/C6000/bios/lib" -i"C:/CCStudio_v3.1/C6000/cgtools/lib"
+"C:\CCStudio_v3.1\MyProjects\volume.cmd"
+"C:\CCStudio_v3.1\MyProjects\Debug\load.obj"
+"C:\CCStudio_v3.1\MyProjects\Debug\vectors.obj"
+"C:\CCStudio_v3.1\MyProjects\Debug\volume.obj"
+"C:\CCStudio_v3.1\MyProjects\csl6416.lib"
+"C:\CCStudio_v3.1\MyProjects\dsk6416bsl.lib"
+"C:\CCStudio_v3.1\MyProjects\rts6400.lib"

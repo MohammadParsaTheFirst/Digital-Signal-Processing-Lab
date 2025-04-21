@@ -1,0 +1,54 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\CCStudio_v3.1\MyProjects\lab5\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="csl6416.lib"
+Source="dsk6416.h"
+Source="dsk6416bsl.lib"
+Source="load.asm"
+Source="rts6400.lib"
+Source="vectors.asm"
+Source="volume.c"
+Source="volume.h"
+Source="volume.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -fr"$(Proj_dir)\Debug" -d"_DEBUG" -mv6400
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"$(Proj_dir)\Release" -mv6400
+
+["Linker" Settings: "Debug"]
+Options=-c -m".\Debug\lab5.map" -o".\Debug\lab5.out" -w -x
+
+["Linker" Settings: "Release"]
+Options=-c -m".\Release\lab5.map" -o".\Release\lab5.out" -w -x
+
+["dsk6416.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["dsk6416.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["volume.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["volume.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["volume.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["volume.cmd" Settings: "Release"]
+LinkOrder=1
+

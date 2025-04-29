@@ -27,16 +27,13 @@ void LED(int i , int j){
 	index = i + 3*j + 1;
 	if (index%2==1){
 		DSK6416_LED_on(0);
-	}
-	if (index >=8){
+	} if (index >=8){
 		DSK6416_LED_on(3);
 		index -= 8;
-	}
-	if (index>=4) {
+	} if (index>=4) {
 		DSK6416_LED_on(2);
 		index -= 4;
-	}
-	if (index>=2) {
+	} if (index>=2) {
 		DSK6416_LED_on(1);
 		index -= 2;
 	}
@@ -44,11 +41,11 @@ void LED(int i , int j){
 }
 
 double max(double x, double y) {
-if (x<y ) {
-	return y;
-} else {
-	return x;}
-
+	if (x<y ) {
+		return y;
+	} else {
+		return x;
+	}
 }
 
 double max_inner_prod(short int*x, int l, double fc) {
@@ -58,7 +55,6 @@ double max_inner_prod(short int*x, int l, double fc) {
 		sum1 += sin(2*pi*fc*i/Fs)*((double)x[i])/1000;
 		sum2 += cos(2*pi*fc*i/Fs)*((double)x[i])/1000;
 	}
-	
 	return max(abs(sum1), abs(sum2));
 }
 
@@ -68,13 +64,13 @@ static int processing(short int *input)
 	int index1=0, index2=0;
 	int i=0, j=0;
 	double corr = 0, max1= 0, max2 =0 ;
-    for (i=0;i<3;i++){
-    	corr = max_inner_prod(input, BUFSIZE, freqs_hor[i]);
+    	for (i=0;i<3;i++){
+    		corr = max_inner_prod(input, BUFSIZE, freqs_hor[i]);
 		if(corr> max1) {
 			index1 = i;
 			max1 = corr;
 		}
-    } 
+    	} 
 	corr = 0;
 	for (; j<4; j++){
 		corr = max_inner_prod(input, BUFSIZE, freqs_ver[j]);
@@ -84,18 +80,14 @@ static int processing(short int *input)
 		}
 	}
 
-	// thr
-	
+	// thresholding
 	if ((max1>THR) && (max2 > THR)) {
 		LED(index1, index2);
-
-	}
-	else {
+	} else {
 		DSK6416_LED_off(1);
 		DSK6416_LED_off(0);
 		DSK6416_LED_off(3);
 		DSK6416_LED_off(2);
-		//puts("nashod");
 	}
 
 
@@ -120,7 +112,8 @@ interrupt void serialPortRcvISR(){
 	for (i=N-1; i>0;i= i-1){
 		buffer_right[i] = buffer_right[i-1];
 	}
-	buffer_right[0] = (short int)temp_right; // update buffer
+	// update buffer
+	buffer_right[0] = (short int)temp_right; 
 	counter += 1;
 	if(counter == L){
 		counter = 0;

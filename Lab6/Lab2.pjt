@@ -1,0 +1,61 @@
+; Code Composer Project File, Version 2.0 (do not modify or remove this line)
+
+[Project Settings]
+ProjectDir="C:\CCStudio_v3.1\MyProjects\lab2\Lab2\"
+ProjectType=Executable
+CPUFamily=TMS320C64XX
+Tool="Compiler"
+Tool="CustomBuilder"
+Tool="DspBiosBuilder"
+Tool="Linker"
+Config="Debug"
+Config="Release"
+
+[Source Files]
+Source="csl6416.lib"
+Source="dsk6416.h"
+Source="dsk6416_aic23.h"
+Source="dsk6416bsl.lib"
+Source="main.c"
+Source="MassoudBabaieZadeh_IO.c"
+Source="MassoudBabaieZadeh_IO.h"
+Source="rts6400.lib"
+Source="vectors.asm"
+Source="lab2.cmd"
+
+["Compiler" Settings: "Debug"]
+Options=-g -fr"$(Proj_dir)\Debug" -d"_DEBUG" -mv6400
+
+["Compiler" Settings: "Release"]
+Options=-o3 -fr"$(Proj_dir)\Release" -mv6400
+
+["Linker" Settings: "Debug"]
+Options=-c -m".\Debug\Lab2.map" -o".\Debug\Lab2.out" -w -x
+
+["Linker" Settings: "Release"]
+Options=-c -m".\Release\Lab2.map" -o".\Release\Lab2.out" -w -x
+
+["dsk6416.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["dsk6416.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["dsk6416_aic23.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["dsk6416_aic23.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["MassoudBabaieZadeh_IO.h" Settings: "Debug"]
+ExcludeFromBuild=true
+
+["MassoudBabaieZadeh_IO.h" Settings: "Release"]
+ExcludeFromBuild=true
+
+["lab2.cmd" Settings: "Debug"]
+LinkOrder=1
+
+["lab2.cmd" Settings: "Release"]
+LinkOrder=1
+
